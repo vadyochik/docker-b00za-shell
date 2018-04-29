@@ -11,21 +11,18 @@ RUN dnf -y upgrade && \
                    deletemail elinks fetchmail \
                    getmail iperf isync lftp libtranslate \
                    lynx mutt ncftp w3m whatmask && \
-    dnf -y groupinstall "Text-based Internet"
-#    dnf -y groupinstall "Security Lab"
-
-# install additional packages
-RUN dnf -y install sshrc tmux mc vim-syntastic-ansible \
+    dnf -y groupinstall "Text-based Internet" && \
+    dnf -y install sshrc tmux mc vim-syntastic-ansible \
                    calcurse task tasksh vit timew kpcli \
-                   pwgen apg
+                   pwgen apg && \
+    dnf clean all
 
 # add non-privileged user and configure sudo
 RUN useradd -u 1001 -c "B00ZA U53R" -G wheel b00za && \
     sed -i 's/^%wheel\s*ALL=(ALL)\s*ALL$/# &/; s/^#\s*\(%wheel\s*ALL=(ALL)\s*NOPASSWD:\s*ALL$\)/\1/' /etc/sudoers
 
 # copy our dotfiles
-COPY ./.bashrc /home/b00za/.bashrc
-COPY ./.tmux.conf /home/b00za/.tmux.conf
+COPY ./dotfiles/* /home/b00za/
 
 RUN chown -R b00za:b00za /home/b00za
 
