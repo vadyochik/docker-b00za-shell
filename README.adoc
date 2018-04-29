@@ -1,0 +1,51 @@
+= Fedora based shell environment from b00za
+
+Various console based tools and utilities are included in the image. You start your journey in tmux. You can detach and attach back if needed.
+
+== Stuff included in the image
+
+* Preinstalled software of "Core" and "Standard" dnf groups.
+* Preinstalled official Fedora packages of the following text-based utilities:
+    - *Translator*: Natural language translation library `libtranslate` (`translate` console utility translates a text or web page).
+    - *Email clients*: `mutt`, `alpine` and other email related utilities (`abook`, `deletemail`, `fetchmail`, `getmail`, `isync` ).
+    - *Web browsers*: `lynx`, `elinks`, and `w3m`.
+    - *TODO and organizers*: Taskwarrior TODO list manager and related utilities (`task`, `tasksh`, `vit`, `timew`), `calcurse` calendar.
+    - *Passwords management*: KeePass Command Line Interface `kpcli`, password generators (`pwgen`, `apg`).
+    - *Ansible things*: `ansible` itself, best practices checker (`ansible-lint`) and vim syntax checker.
+    - *Other tools*: `sshrc`, `mc`, `iperf`, `lftp`, `ncftp`, `cadaver`.
+* Default config files:
+    - *.bashrc*
+    - *.tmux.conf*
+* Non-privileged user *b00za* with full no-password `sudo`.
+
+== Examples
+
+The image is configured as an https://hub.docker.com/r/vadyochik/b00za-shell/[automated build] on Docker Hub. To build it manually:
+....
+docker build -t vadyochik/b00za-shell .
+....
+
+Run container mounting named volume as user's home:
+....
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za b00za-shell
+....
+
+Detach from container using standard tmux detach hotkey: ctrl+b,d (C-b d). Note: this combination is unbound from tmux in this image, so it will work only for docker started with `--detach-keys 'ctrl-b,d'` option. This will detach from running container, so you can attach to it later by running:
+....
+docker attach --detach-keys 'ctrl-b,d' b00za
+....
+
+To simplify the above commands, here is an alias to put into your .bashrc:
+....
+alias b00za='if docker container inspect --format="{{.Name}}: {{.Config.Cmd}}" b00za; then docker attach --detach-keys 'ctrl-b,d' b00za; else docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za vadyochik/b00za-shell; fi'
+....
+
+It will either start a new b00za container or attach to the running one.
+
+== The idea is totally not new
+
+There is already a cool project already here on GitHub, but based on Ubuntu! You should definitely check it out:
+
+https://github.com/AGhost-7/docker-dev
+
+Many thanks to the author of the above project for inspiration!
