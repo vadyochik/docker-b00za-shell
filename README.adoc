@@ -7,32 +7,47 @@ Various console based tools and utilities are included in the image. You start y
 * Preinstalled software of "Core" and "Standard" dnf groups.
 * Preinstalled official Fedora packages of the following text-based utilities:
     - *Translator*: Natural language translation library `libtranslate` (`translate` console utility translates a text or web page).
-    - *Email clients*: `mutt`, `alpine` and other email related utilities (`abook`, `deletemail`, `fetchmail`, `getmail`, `isync` ).
-    - *Web browsers*: `lynx`, `elinks`, and `w3m`.
+    - *Email clients*: `mutt` and other email related utilities (`abook`, `isync` ).
+    - *Web browsers*: `w3m`.
     - *TODO and organizers*: Taskwarrior TODO list manager and related utilities (`task`, `tasksh`, `vit`, `timew`), `calcurse` calendar.
-    - *Passwords management*: KeePass Command Line Interface `kpcli`, password generators (`pwgen`, `apg`).
+    - *Passwords management*: KeePass Command Line Interface `kpcli`, password manager `pass`, password generators (`pwgen`, `apg`).
     - *Ansible things*: `ansible` itself, best practices checker (`ansible-lint`) and vim syntax checker.
-    - *Other tools*: `sshrc`, `mc`, `iperf`, `lftp`, `ncftp`, `cadaver`.
+    - *Other tools*: `sshrc`, `mc`, `iperf`, `ncftp`, `cadaver`.
 * Default config files:
     - *.bashrc*
     - *.tmux.conf*
+    - *.config/mc/ini*
+    - *.tmuxinator/b00za.yml*
+    - *.inputrc*
+    - *.terminfo/s/screen-256color*
 * Non-privileged user *b00za* with full no-password `sudo`.
 
 == Examples
 
-The image is configured as an https://hub.docker.com/r/vadyochik/b00za-shell/[automated build] on Docker Hub. To build it manually:
+The image is configured as an https://hub.docker.com/r/vadyochik/b00za-shell/[automated build] on Docker Hub. To build it manually and then check its layer history run the below commands:
 ....
 docker build -t vadyochik/b00za-shell .
+docker history vadyochik/b00za-shell --no-trunc --format "table {{.CreatedSince}}\t{{.Size}}\t{{.CreatedBy}}"
+....
+
+Run container (no data will be saved after exit):
+....
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' vadyochik/b00za-shell
 ....
 
 Run container mounting named volume as user's home:
 ....
-docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za b00za-shell
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za vadyochik/b00za-shell
+....
+
+Run container mounting selected local folders into user's home:
+....
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v ~/.gnupg-b00za:/home/b00za/.gnupg -v ~/.mbsyncrc:/home/b00za/.mbsyncrc -v ~/.mutt:/home/b00za/.mutt -v ~/.taskrc:/home/b00za/.taskrc -v ~/.task:/home/b00za/.task vadyochik/b00za-shell
 ....
 
 Detach from container using standard tmux detach hotkey: ctrl+b,d (C-b d). Note: this combination is unbound from tmux in this image, so it will work only for docker started with `--detach-keys 'ctrl-b,d'` option. This will detach from running container, so you can attach to it later by running:
 ....
-docker attach --detach-keys 'ctrl-b,d' b00za
+docker attach --detach-keys 'ctrl-b,d' vadyochik/b00za-shell
 ....
 
 To simplify the above commands, here is an alias to put into your .bashrc:
