@@ -1,0 +1,6 @@
+[user]
+	email = b00za@disroot.org
+	name = b00za
+	signingkey = 3B4DAB66882A20545E7D9937CD32E3FF2ACF442D
+[gpg]
+	program = gpg2

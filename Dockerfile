@@ -10,7 +10,7 @@ RUN sed -i 's/^\s*tsflags=nodocs/#&/' /etc/dnf/dnf.conf && \
     dnf clean all
 
 # installing additional packages
-RUN dnf -y install mutt mailx isync abook \
+RUN dnf -y install mutt mailx isync abook fortune-mod \
 #                   notmuch notmuch-mutt notmuch-vim \
                    cadaver libtranslate \
                    w3m ncftp whatmask iperf mc pinentry \
@@ -25,6 +25,7 @@ RUN useradd -u 1001 -c "B00ZA U53R" -G wheel b00za && \
 
 # copy our dotfiles
 COPY ./dotfiles/ /home/b00za/
+COPY ./examples/ /home/b00za/examples/
 
 RUN chown -R b00za:b00za /home/b00za
 

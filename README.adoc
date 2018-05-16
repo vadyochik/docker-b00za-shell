@@ -12,7 +12,7 @@ Various console based tools and utilities are included in the image. You start y
     - *TODO and organizers*: Taskwarrior TODO list manager and related utilities (`task`, `tasksh`, `vit`, `timew`), `calcurse` calendar.
     - *Passwords management*: KeePass Command Line Interface `kpcli`, password manager `pass`, password generators (`pwgen`, `apg`).
     - *Ansible things*: `ansible` itself, best practices checker (`ansible-lint`) and vim syntax checker.
-    - *Other tools*: `sshrc`, `mc`, `iperf`, `ncftp`, `cadaver`.
+    - *Other tools*: `sshrc`, `mc`, `iperf`, `whatmask`, `ncftp`, `cadaver`.
 * Default config files:
     - *.bashrc*
     - *.tmux.conf*
@@ -32,17 +32,17 @@ docker history vadyochik/b00za-shell --no-trunc --format "table {{.CreatedSince}
 
 Run container (no data will be saved after exit):
 ....
-docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' vadyochik/b00za-shell
+docker run -it --rm --name b00za vadyochik/b00za-shell
 ....
 
-Run container mounting named volume as user's home:
+Run container mounting named volume as user's home (and set timezone):
 ....
-docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za vadyochik/b00za-shell
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -e TZ=Europe/Kiev -v b00za_home:/home/b00za vadyochik/b00za-shell
 ....
 
 Run container mounting selected local folders into user's home:
 ....
-docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v ~/.gnupg-b00za:/home/b00za/.gnupg -v ~/.mbsyncrc:/home/b00za/.mbsyncrc -v ~/.mutt:/home/b00za/.mutt -v ~/.taskrc:/home/b00za/.taskrc -v ~/.task:/home/b00za/.task vadyochik/b00za-shell
+docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -e TZ=Europe/Kiev -v ~/.gnupg:/home/b00za/.gnupg -v ~/.mutt:/home/b00za/.mutt -v ~/Mail:/home/b00za/Mail -v ~/.taskrc:/home/b00za/.taskrc -v ~/.task:/home/b00za/.task -v ~/.gitconfig:/home/b00za/.gitconfig vadyochik/b00za-shell
 ....
 
 Detach from container using standard tmux detach hotkey: ctrl+b,d (C-b d). Note: this combination is unbound from tmux in this image, so it will work only for docker started with `--detach-keys 'ctrl-b,d'` option. This will detach from running container, so you can attach to it later by running:
@@ -52,7 +52,7 @@ docker attach --detach-keys 'ctrl-b,d' vadyochik/b00za-shell
 
 To simplify the above commands, here is an alias to put into your .bashrc:
 ....
-alias b00za='if docker container inspect --format="{{.Name}}: {{.Config.Cmd}}" b00za; then docker attach --detach-keys 'ctrl-b,d' b00za; else docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -v b00za_home:/home/b00za vadyochik/b00za-shell; fi'
+alias b00za='if docker container inspect --format="{{.Name}}: {{.Config.Cmd}}" b00za; then docker attach --detach-keys 'ctrl-b,d' b00za; else docker run -it --rm --name b00za --detach-keys 'ctrl-b,d' -e TZ=Europe/Kiev -v b00za_home:/home/b00za vadyochik/b00za-shell; fi'
 ....
 
 It will either start a new b00za container or attach to the running one.
