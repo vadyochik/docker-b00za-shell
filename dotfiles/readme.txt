@@ -8,3 +8,4 @@ The following windows have been created:
 3:browser   => w3m web browser
 4:editor    => vim editor pane + shell pane
 5:mc        => Midnight Commander window
+6:stats     => Sync emails with mbsync every 5 mins + top pane

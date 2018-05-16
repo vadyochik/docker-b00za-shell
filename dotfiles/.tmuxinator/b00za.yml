@@ -38,3 +38,8 @@ windows:
         - vim
         - cat /etc/redhat-release
   - mc: mc
+  - stats:
+      layout: even-horizontal
+      panes:
+        - while /bin/true; do date; mbsync -c ~/.mutt/mbsyncrc -a || break; sleep 5m; echo; done
+        - top
